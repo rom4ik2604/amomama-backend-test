@@ -74,6 +74,6 @@ class ClientController extends AbstractController
      */
     public function search(Request $request): JsonResponse
     {
-        return $this->json($this->finder->find($request->get('q')));
+        return $this->json($this->finder->find($request->get('q'), 20));
     }
 }

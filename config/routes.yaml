@@ -1,3 +1,7 @@
 clients:
   resource: routes/api/client.yaml
   prefix: /api/clients
+
+home:
+  path: /
+  controller: App\Controller\HomeController::index
