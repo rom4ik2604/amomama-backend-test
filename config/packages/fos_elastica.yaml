@@ -1,0 +1,36 @@
+# Read the documentation: https://github.com/FriendsOfSymfony/FOSElasticaBundle/blob/master/doc/setup.md
+fos_elastica:
+    clients:
+        default: { url: '%env(ELASTICSEARCH_URL)%' }
+    indexes:
+        client_index:
+            settings:
+                analysis:
+                    analyzer:
+                        substring_analyzer:
+                            tokenizer: standard
+                            filter: [ substring, lowercase ]
+                    filter:
+                        substring:
+                            type: edge_ngram
+                            min_gram: 3
+                            max_gram: 10
+            types:
+                client:
+                    persistence:
+                        driver: orm
+                        model: App\Entity\Client
+                        provider: ~
+                        finder: ~
+                        listener: ~
+                    properties:
+                        firstName:
+                            type: text
+                            analyzer: substring_analyzer
+                        lastName:
+                            type: text
+                            analyzer: substring_analyzer
+                        phoneNumbers:
+                            type: text
+                            index: false
+

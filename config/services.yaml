@@ -35,3 +35,7 @@ services:
             $logger: '@monolog.logger'
         tags:
             - { name: monolog.logger, handler: amqp, channel: amqp }
+
+    App\Controller\Rest\ClientController:
+        tags: ['controller.service_arguments']
+        arguments: ['@fos_elastica.finder.client_index.client']

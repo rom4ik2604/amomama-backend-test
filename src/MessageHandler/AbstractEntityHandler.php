@@ -13,6 +13,11 @@ abstract class AbstractEntityHandler
 
     protected LoggerInterface $logger;
 
+    /**
+     * AbstractEntityHandler constructor.
+     * @param EntityManagerInterface $em
+     * @param LoggerInterface $logger
+     */
     public function __construct(EntityManagerInterface $em, LoggerInterface $logger)
     {
         $this->em = $em;
