@@ -1,3 +1,4 @@
 # amomama-backend-test
-consumer command:
-bin/console messenger:consume client
+Run consumer command:
+
+``php bin/console messenger:consume client``
