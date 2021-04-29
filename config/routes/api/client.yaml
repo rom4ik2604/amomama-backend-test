@@ -1,0 +1,8 @@
+client_index:
+  path: /
+  controller: App\Controller\Rest\ClientController::index
+  methods: [GET]
+client_save:
+  path: /
+  controller: App\Controller\Rest\ClientController::save
+  methods: [POST]

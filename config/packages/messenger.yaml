@@ -1,0 +1,10 @@
+framework:
+    messenger:
+        transports:
+            client:
+                dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
+                options:
+                    queue_name: save_clients
+
+        routing:
+            'App\Message\SaveClient': client
