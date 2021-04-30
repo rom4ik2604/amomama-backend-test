@@ -1,4 +1,9 @@
 # amomama-backend-test
-Run consumer command:
+
+Run commands:
+
+``yarn install``
+
+``yarn build``
 
 ``php bin/console messenger:consume client``
