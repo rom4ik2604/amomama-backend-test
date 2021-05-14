@@ -31,7 +31,7 @@ export default {
     search() {
       this.loaded = false;
       this.searchClients().then((response) => {
-        this.clients = response;
+        this.clients = response.data;
         this.loaded = true;
       })
     },
@@ -45,7 +45,7 @@ export default {
   created() {
     this.loaded = false;
     this.getClients().then((response) => {
-      this.clients = response;
+      this.clients = response.data;
       this.loaded = true;
     })
   }

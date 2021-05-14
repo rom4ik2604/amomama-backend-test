@@ -2,13 +2,9 @@
 
 namespace App\Controller\Rest;
 
-use App\Entity\Client;
 use App\Message\SaveClient;
 use App\Repository\ClientRepository;
-use App\Service\Validator\ValidatorInterface;
-use Doctrine\Common\Collections\ArrayCollection;
-use FOS\ElasticaBundle\Finder\PaginatedFinderInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Service\ClientStoreService;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -16,56 +12,38 @@ use Symfony\Component\HttpFoundation\Request;
  * Class ClientController
  * @package App\Controller\Rest
  */
-class ClientController extends AbstractController
+class ClientController extends BaseController
 {
-    private PaginatedFinderInterface $finder;
-
-    /**
-     * ClientController constructor.
-     * @param PaginatedFinderInterface $finder
-     */
-    public function __construct(PaginatedFinderInterface $finder)
-    {
-        $this->finder = $finder;
-    }
-
     /**
      * @param ClientRepository $clientRepository
      * @return JsonResponse
      */
     public function index(ClientRepository $clientRepository): JsonResponse
     {
-        return $this->json($clientRepository->findAll());
+        try {
+            return $this->response->successResponse($clientRepository->findAll());
+        } catch (\Throwable $throwable) {
+            return $this->response->internalErrorResponse();
+        }
     }
 
     /**
      * @param Request $request
-     * @param ValidatorInterface $validator
      * @return JsonResponse
      */
-    public function save(Request $request, ValidatorInterface $validator): JsonResponse
+    public function save(Request $request): JsonResponse
     {
-        $requestData = new ArrayCollection($request->toArray());
+        $client = ClientStoreService::createClient($request);
 
-        $client = new Client();
-        $client->setFirstName($requestData->get('firstName'));
-        $client->setLastName($requestData->get('lastName'));
-        $client->setPhoneNumbers($requestData->get('phoneNumbers') ?? []);
-
-        $errors = $validator->validate($client);
+        $errors = $this->validator->validate($client);
 
         if ($errors) {
-            return $this->json([
-                'status' => 'error',
-                'errors' => $errors
-            ], 400);
+            return $this->response->badRequestResponse($errors);
         }
 
         $this->dispatchMessage(new SaveClient($client));
 
-        return $this->json([
-            'status' => 'created'
-        ], 201);
+        return $this->response->successResponse();
     }
 
     /**
@@ -74,6 +52,10 @@ class ClientController extends AbstractController
      */
     public function search(Request $request): JsonResponse
     {
-        return $this->json($this->finder->find($request->get('q'), 20));
+        try {
+            return $this->response->successResponse($this->finder->find($request->get('q'), 20));
+        } catch (\Throwable $throwable) {
+            return $this->response->internalErrorResponse();
+        }
     }
 }
